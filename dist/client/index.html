@@ -3,16 +3,27 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Three.js TypeScript Tutorials by Sean Bradley</title>
+        <title>Three.js TagCloud</title>
         <style>
             body {
                 overflow: hidden;
                 margin: 0px;
+            }
+            #container{
+              width:50%
+            }
+            #textarea{
+                position:fixed;
+                top:0px;
+                z-index:100;
+                min-width:100px;
+                border: solid 1px #e0ffe0;
             }
         </style>
     </head>
 
     <body>
         <script type="module" src="bundle.js"></script>
+        <div id="container"></div>
     </body>
 </html>
