@@ -1,10 +1,11 @@
 import { stringify } from 'querystring'
 import * as THREE from 'three'
+import { Object3D } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
-const amount = 20
+const amount = 300
 const size = 5
-let particles: any = []
+let particles: Object3D[] = []
 
 const scene = new THREE.Scene()
 scene.background = new THREE.Color( 0xcccccc )
@@ -26,11 +27,11 @@ const controls = new OrbitControls(camera, renderer.domElement)
 const raycaster = new THREE.Raycaster()
 const mouse = new THREE.Vector2()
 
-let INTERSECTED: any 
+let INTERSECTED: any
 
 
 const geometry = new THREE.BufferGeometry()
-const points:any = []
+const points = []
 
 const material = new THREE.MeshBasicMaterial({
     color: 0x000000,
@@ -56,11 +57,6 @@ for ( var i =0; i < amount; i ++){
     particle.position.y = point.y
     particle.position.z = point.z
     
-    //particle.position.x = Math.random() * 8 - 1
-    //particle.position.y = Math.random() * 4 - 1
-    //particle.position.z = Math.random() * 2 - 1
-    //particle.position.normalize()
-    //particle.position.multiplyScalar( Math.random() * amount + 450 )
     particle.scale.x = particle.scale.y = particle.scale.z = size
     particles.push( particle )
     
@@ -69,6 +65,7 @@ for ( var i =0; i < amount; i ++){
 }
 geometry.setFromPoints(points)
 const line = new THREE.Line( geometry, new THREE.LineBasicMaterial( { color: 0xe0ffe0 } ) )
+
 
 
 document.addEventListener( 'mousemove', onDocumentMouseMove, false)
@@ -88,10 +85,6 @@ function onWindowResize() {
 
 function animate() {
     requestAnimationFrame(animate)
-
-    //cube.rotation.x += 0.01
-    //cube.rotation.y += 0.01
-
     controls.update()
 
     render()
@@ -100,15 +93,19 @@ function animate() {
 
 const UItext = document.createElement("div")
 UItext.setAttribute('id','textarea')
-/*
-let url = window.location.href + 'data.json'
-let stringified:any;
-async function obj() {
+document.body.appendChild(UItext)
+const url = window.location.href + 'data.json'
+let stringified:string
+let Content:any
+let intersectID:any
+
+async function getJsonData() {
      let j = await (await fetch(url)).json()
-     stringified = j.name  
+     stringified = j.name + ' ' + j.surname  
+     Content = document.createTextNode("Hello, " + stringified)
 } 
-obj() */
-const Content = document.createTextNode("Hello World")
+getJsonData()
+
 
 
 
@@ -122,23 +119,30 @@ function render() {
         if ( INTERSECTED != intersects[ 0 ].object ) {
             if ( INTERSECTED ) INTERSECTED.scale.x = INTERSECTED.scale.y = INTERSECTED.scale.z = size
             INTERSECTED = intersects[ 0 ].object;
+            console.log(INTERSECTED.id)
             INTERSECTED.scale.x = INTERSECTED.scale.y = INTERSECTED.scale.z = size * 3
-           
             UItext.appendChild(Content)
-            document.body.appendChild(UItext)
+
+            
+            
             UItext.style.visibility = "visible"
-            sprite.position.set( INTERSECTED.position.x +50,INTERSECTED.position.y+20,INTERSECTED.position.z)
-            scene.add(sprite)
+
+
+            //sprite.position.set( INTERSECTED.position.x +50,INTERSECTED.position.y+20,INTERSECTED.position.z)
+            //scene.add(sprite)
             scene.add(line)
+
+
            
         }
     }else{
         if ( INTERSECTED ) INTERSECTED.scale.x = INTERSECTED.scale.y = INTERSECTED.scale.z = size 
-            INTERSECTED = null
-            scene.remove(sprite)
-            scene.remove(line)
+            
+            INTERSECTED = undefined
+            //scene.remove(sprite)
+           
         UItext.style.visibility = "hidden"
-        
+        scene.remove(line)
        
     }
     renderer.render(scene, camera)
