@@ -1,6 +1,13 @@
 {
-    "name":"Marjolein",
-    "surname":"Manintveld"
+ "members":[   
+    {"name":"Wouter van Ginneken"},
+    {"name":"Marjolein Manintveld"},
+    {"name":"Muradiiiin"},
+    {"name":"Kali Mash Mash"},
+    {"name":"Planties"},
+    {"name":"Meubelen"},
+    {"name":"Projecten"}
+ ]
 
    
 }
