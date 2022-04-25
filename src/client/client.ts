@@ -25,7 +25,6 @@ container?.appendChild(renderer.domElement)
 
 const UItext = document.createElement("div")
 UItext.setAttribute('id','textarea')
-UItext.innerHTML = "Hello"
 document.body.appendChild(UItext)
 
 const geometry = new THREE.BufferGeometry()
@@ -72,10 +71,6 @@ renderer.setSize(window.innerWidth, window.innerHeight)
 const controls = new OrbitControls(camera, renderer.domElement)
 const raycaster = new THREE.Raycaster()
 const mouse = new THREE.Vector2()
-
-
-
-
 
 
 const material = new THREE.MeshBasicMaterial({
@@ -134,7 +129,7 @@ function render() {
             //weird
             ID = INTERSECTED.id-12
             console.log(ID)
-            UItext.innerHTML = JSON.stringify(data[ID])
+            UItext.innerHTML = JSON.stringify(data[ID]).replace(/["]+/g, '')
 
             INTERSECTED.scale.x = INTERSECTED.scale.y = INTERSECTED.scale.z = size * 3
             
