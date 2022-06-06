@@ -16,6 +16,7 @@
             #textarea{
                 font-family: orpheuspro, serif;
                 font-weight: 400;
+                text-align: center;
                 font-style: normal;
                 font-size: 5rem;
                 position:fixed;
@@ -26,11 +27,31 @@
                 min-width:100px;
                 border: solid 1px #e0ffe0;
             }
+            #input{
+                position: fixed;
+                border:1px solid #000;
+                background: #fff;
+                z-index: 1;
+                top:20px;
+                left:20px;
+                min-width:150px;
+                height:20px;
+                padding: 4px;
+            }
+            input{
+                color: #00f;
+                border:1px solid #000;
+                margin-left:4px;
+            }
+            input:focus-visible {
+                outline: #e0ffe0 solid 3px;
+            }
         </style>
     </head>
 
     <body>
         <script type="module" src="bundle.js"></script>
         <div id="container"></div>
+<form id="input" class="textinput" method="post" action="/client"><label for="name">Remember</label><input type="text" name="name" id="name"></form>
     </body>
 </html>
