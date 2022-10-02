@@ -1,19 +1,23 @@
 import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { MapControls, OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Stats from 'three/examples/jsm/libs/stats.module'
 import { GUI } from 'dat.gui'
 import { TWEEN } from 'three/examples/jsm/libs/tween.module.min'
 import { io } from 'socket.io-client'
 
 const scene = new THREE.Scene()
+scene.rotateY(45*Math.PI/180);
 
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+const camera = new THREE.PerspectiveCamera(25, window.innerWidth / window.innerHeight, 0.1, 1000)
+camera.translateY(5);
 
+console.log(camera.position)
 const renderer = new THREE.WebGLRenderer()
 renderer.setSize(window.innerWidth, window.innerHeight)
 document.body.appendChild(renderer.domElement)
 
-const controls = new OrbitControls(camera, renderer.domElement)
+//const controls = new OrbitControls(camera, renderer.domElement)
+const controls = new MapControls(camera, renderer.domElement)
 
 const geometry = new THREE.BoxGeometry()
 const material = new THREE.MeshBasicMaterial({
@@ -125,7 +129,7 @@ const animate = function () {
     TWEEN.update()
 
     if (clientCubes[myId]) {
-        camera.lookAt(clientCubes[myId].position)
+       // camera.lookAt(clientCubes[myId].position)
     }
 
     render()
