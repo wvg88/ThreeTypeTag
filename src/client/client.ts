@@ -1,86 +1,86 @@
 import * as THREE from 'three'
-import { MapControls, OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { World } from './world'
+import { MapControls } from 'three/examples/jsm/controls/OrbitControls'
 import Stats from 'three/examples/jsm/libs/stats.module'
 import { GUI } from 'dat.gui'
 import { TWEEN } from 'three/examples/jsm/libs/tween.module.min'
 import { io } from 'socket.io-client'
-import { Line } from 'three'
+
+
+
 
 
 const scene = new THREE.Scene()
 const pointer = new THREE.Vector2()
 const raycaster = new THREE.Raycaster()
-const path = new THREE.Line3()
 const lineStart = new THREE.Vector3()
 const lineEnd = new THREE.Vector3()
 const points:any = []
 
-const camera = new THREE.PerspectiveCamera(25, window.innerWidth / window.innerHeight, 0.1, 1000)
 
-const renderer = new THREE.WebGLRenderer()
-renderer.setSize(window.innerWidth, window.innerHeight)
-document.body.appendChild(renderer.domElement)
+async function main(){
+    const container:any = document.querySelector('#container')
+
+    const world = new World(container)
+
+    await world.init()
+
+    world.start()
+}
+main().catch((err) => {
+    console.error(err)
+})
 
 
 
-//const controls = new OrbitControls(camera, renderer.domElement)
-const controls = new MapControls(camera, renderer.domElement)
+
+//const controls = new MapControls(camera, renderer.domElement)
 
 const box = new THREE.BoxGeometry()
 const material = new THREE.MeshBasicMaterial({
     color: 0x00ff00,
     wireframe: true,
 })
-
-
-
 const myObject3D = new THREE.Object3D()
-
-
-const gridHelper = new THREE.GridHelper(25, 25)
-gridHelper.position.y = -0.5
-//scene.add(gridHelper)
 
 const floorGeo = new THREE.PlaneGeometry(20,20, 10, 10)
 const floor = new THREE.Mesh( floorGeo, material )
 
-floor.rotation.x = -90 * Math.PI/180;
-
+floor.rotation.x = -90 * Math.PI/180
 scene.add(floor)
-const linegeo = new THREE.BufferGeometry().setFromPoints( points );
-const line = new THREE.Line( linegeo, new THREE.LineBasicMaterial({color:0xffffff}) );
-scene.add( line );
-camera.position.y = 5;
-camera.position.z = 4
 
-window.addEventListener('resize', onWindowResize, false)
+const linegeo = new THREE.BufferGeometry().setFromPoints( points )
+const line = new THREE.Line( linegeo, new THREE.LineBasicMaterial({color:0xffffff}) )
+scene.add( line )
+
+
+
+//window.addEventListener('resize', onWindowResize, false)
 window.addEventListener('pointermove', onPointerMove)
 window.addEventListener('click', onmousedown)
 
-function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight
-    camera.updateProjectionMatrix()
-    renderer.setSize(window.innerWidth, window.innerHeight)
-    render()
-}
-const sphereGeometry = new THREE.SphereGeometry( 0.1, 32, 32 );
-const sphereMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
-const sphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
+
+const sphereGeometry = new THREE.SphereGeometry( 0.1, 32, 32 )
+const sphereMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000 } )
+const sphere = new THREE.Mesh( sphereGeometry, sphereMaterial )
 					scene.add( sphere );
 
 function onPointerMove(event:any){
     
-    pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-    pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+    pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1
+    pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1
 
     
 }
 
 function onmousedown(event:any){
-
+    
     myObject3D.position.copy(sphere.position)
-    myObject3D.rotation.y += 1
+
 }
+
+
+
 let myId = ''
 let timestamp = 0
 const clientCubes: { [id: string]: THREE.Mesh } = {}
@@ -131,9 +131,10 @@ socket.on('clients', (clients: any) => {
                             y: clients[p].r._y,
                             z: clients[p].r._z,
                         },
-                        50
+                        10
                     )
                     .start()
+                    
             }
         }
     })
@@ -144,59 +145,45 @@ socket.on('removeClient', (id: string) => {
 })
 
 const stats = Stats()
-document.body.appendChild(stats.dom)
+//document.body.appendChild(stats.dom)
 
-const gui = new GUI()
-const cubeFolder = gui.addFolder('Cube')
-const cubePositionFolder = cubeFolder.addFolder('Position')
-cubePositionFolder.add(myObject3D.position, 'x', -5, 5)
-cubePositionFolder.add(myObject3D.position, 'z', -5, 5)
-cubePositionFolder.open()
-const cubeRotationFolder = cubeFolder.addFolder('Rotation')
-cubeRotationFolder.add(myObject3D.rotation, 'x', 0, Math.PI * 2, 0.01)
-cubeRotationFolder.add(myObject3D.rotation, 'y', 0, Math.PI * 2, 0.01)
-cubeRotationFolder.add(myObject3D.rotation, 'z', 0, Math.PI * 2, 0.01)
-cubeRotationFolder.open()
-cubeFolder.open()
-console.log(linegeo)
 const animate = function () {
     requestAnimationFrame(animate)
 
-    controls.update()
-    raycaster.setFromCamera( pointer, camera );
+    //controls.update()
+    //raycaster.setFromCamera( pointer, camera )
     
-    const intersects = raycaster.intersectObject( floor );
-    lineStart.copy(myObject3D.position)
-    points.push(lineStart)
-    // Toggle rotation bool for meshes that we clicked
+    const intersects = raycaster.intersectObject( floor )
+
+
     if ( intersects.length > 0 ) {
 
-        sphere.position.set( 0, 0, 0 );
-        //helper.lookAt( intersects[ 0 ].face.normal );
-       //console.log(intersects[ 0 ].point)
+        sphere.position.set( 0, 0, 0 )
+        
+        lineStart.copy(myObject3D.position)
+        points.push(lineStart)
         lineEnd.copy(intersects[ 0 ].point)
         sphere.position.copy( intersects[ 0 ].point );
-        path.set(lineStart,lineEnd)
         points.push(lineEnd)
+        
+        linegeo.setFromPoints(points)
+        
     }
     
-    linegeo.setFromPoints(points)
-
-
+    myObject3D.lookAt(lineEnd)
+    
     TWEEN.update()
 
     if (clientCubes[myId]) {
-       // camera.lookAt(clientCubes[myId].position)
+        //camera.lookAt(clientCubes[myId].position)
     }
 
-    render()
+    //render()
 
     stats.update()
 }
 
-const render = function () {
-    renderer.render(scene, camera)
-}
 
-animate()
+
+//animate()
 
