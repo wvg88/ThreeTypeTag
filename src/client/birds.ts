@@ -10,7 +10,7 @@ async function loadBirds() {
     const parrot = setupModel(parrotData)
 
     parrot.position.set(0,0,-10)
-    parrot.scale.set(0.1,0.1,0.1)
+    parrot.scale.set(0.05,0.05,0.05)
     
     return { parrot }
     

@@ -56,8 +56,8 @@ scene.add( line )
 
 
 //window.addEventListener('resize', onWindowResize, false)
-window.addEventListener('pointermove', onPointerMove)
-window.addEventListener('click', onmousedown)
+//window.addEventListener('pointermove', onPointerMove)
+//window.addEventListener('click', onmousedown)
 
 
 const sphereGeometry = new THREE.SphereGeometry( 0.1, 32, 32 )
@@ -85,12 +85,12 @@ let myId = ''
 let timestamp = 0
 const clientCubes: { [id: string]: THREE.Mesh } = {}
 const socket = io()
-socket.on('connect', function () {
-    console.log('connect')
+/*socket.on('connect', function () {
+   // console.log('connect')
 })
 socket.on('disconnect', function (message: any) {
-    console.log('disconnect ' + message)
-})
+   // console.log('disconnect ' + message)
+})*/
 socket.on('id', (id: any) => {
     myId = id
     setInterval(() => {
@@ -101,7 +101,7 @@ socket.on('id', (id: any) => {
         })
     }, 50)
 })
-socket.on('clients', (clients: any) => {
+/*socket.on('clients', (clients: any) => {
     let pingStatsHtml = 'Socket Ping Stats<br/><br/>'
     Object.keys(clients).forEach((p) => {
         timestamp = Date.now()
@@ -122,6 +122,7 @@ socket.on('clients', (clients: any) => {
                         50
                     )
                     .start()
+                    
             }
             if (clients[p].r) {
                 new TWEEN.Tween(clientCubes[p].rotation)
@@ -139,7 +140,7 @@ socket.on('clients', (clients: any) => {
         }
     })
     ;(document.getElementById('pingStats') as HTMLDivElement).innerHTML = pingStatsHtml
-})
+})*/
 socket.on('removeClient', (id: string) => {
     scene.remove(scene.getObjectByName(id) as THREE.Object3D)
 })
@@ -151,7 +152,7 @@ const animate = function () {
     requestAnimationFrame(animate)
 
     //controls.update()
-    //raycaster.setFromCamera( pointer, camera )
+    ///raycaster.setFromCamera( pointer, camera )
     
     const intersects = raycaster.intersectObject( floor )
 
