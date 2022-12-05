@@ -12,6 +12,7 @@ async function loadBirds() {
     parrot.position.set(0,0,-10)
     parrot.scale.set(0.05,0.05,0.05)
     
+    
     return { parrot }
     
 }

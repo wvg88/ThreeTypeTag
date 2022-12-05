@@ -13,7 +13,8 @@ function createCube(){
 }
 
 function createFloor(){
-    const geometry = new PlaneGeometry(20,20, 10, 10)
+    const geometry = new PlaneGeometry(150,150, 10, 10)
+    
     const material = new MeshStandardMaterial({color:0xffffff})
     const floor = new Mesh( geometry, material )
 

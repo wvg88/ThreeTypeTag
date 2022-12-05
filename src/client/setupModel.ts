@@ -7,11 +7,15 @@ function setupModel(data:any){
 
     const mixer = new AnimationMixer(model)
     const action = mixer.clipAction(clip)
-
+    
 
     action.play()
 
-    model.tick = (delta:number) => mixer.update(delta)
+    model.tick = (delta:number) => {
+
+        mixer.update(delta)
+        
+    }
 
 
     return model

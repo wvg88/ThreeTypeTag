@@ -1,4 +1,4 @@
-import { Mesh, Object3D, Vector2, Vector3 } from "three";
+import { BufferGeometry, Line, LineBasicMaterial, Mesh, Object3D, Vector2, Vector3 } from "three";
 import { Animate } from "./Animate";
 import { loadBirds } from "./birds";
 import { createCamera } from "./camera"
@@ -29,24 +29,10 @@ class World{
         this.container = container.append(this.renderer.domElement)
         this.animate = new Animate(this.camera,this.scene, this.renderer)
 
-        const pointer = new Vector2()
-        Pointer(pointer)
-
-        const floor = createFloor()
-        this.scene.add(floor)
-        
         const {mainLight,ambientLight, lightHelper} = createLights()
-        const cube = createCube()
-       
-        this.animate.updatables.push(cube)
-        this.scene.add(cube, mainLight, ambientLight, lightHelper)
+   
+        this.scene.add(mainLight, ambientLight, lightHelper)
 
-        const sphere = createSphere()
-        this.scene.add(sphere)
-        
-        const raycaster = raycast(pointer,this.camera,floor,sphere, cube)
-        this.animate.updatables.push(raycaster)
-        
         
         const resizer = new Resizer(container,this.camera,this.renderer)
         const controls = createControls(this.camera, this.renderer.domElement)
@@ -59,9 +45,25 @@ class World{
         
     }
     async init(){
+
+
+        
+
+
         const {parrot} = await loadBirds()
         this.animate.updatables.push(parrot)
         this.scene.add(parrot)
+
+        const sphere = createSphere()
+        this.scene.add(sphere)
+        const pointer = new Vector2()
+        Pointer(pointer)
+
+        const floor = createFloor()
+        this.scene.add(floor)
+        const raycaster = raycast(pointer,this.camera,this.scene,floor,sphere, parrot)
+        this.animate.updatables.push(raycaster)
+        
 
 
     }
